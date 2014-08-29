@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+var debug = require('debug')('BlockingDemonstration');
+var express = require('express'), Q = require("q"), async = require("async");
+
+var blocking = express();
+var nonblocking = express();
+var nonblockingAsync = express();
+
+//var app = require('../app');
+
+//app.set('port', process.env.PORT || 3000);
+
+var server = nonblocking.listen(5000, function() {
+  debug('Nonblocking server listening on port ' + server.address().port);
+});
+
+var blockingServer = blocking.listen(5001, function(){
+	debug("Blocking server listening on "+blockingServer.address().port);
+});
+
+var nonblockingServerAsync = nonblockingAsync.listen(5002, function(){
+	debug("Non blocking server with async lib algorithm listening on " + nonblockingServerAsync.address().port);
+});
+
+//Q.longStackSupport = true;
+var nonblockingRouter = express.Router();
+var blockingRouter = express.Router();
+var nonblockingRouterAsync = express.Router();
+
+nonblockingRouter.get("/:max", function(req, res){
+	var max = req.params.max;
+
+	function fib(n){        //a promise that resolves to a value
+		return n.then(function(result){
+			if(result <= 1) {
+				return Q.when(result);
+			} else {
+				return Q.all(
+					[
+						fib(Q.when(result - 1)),
+						fib(Q.when(result - 2))
+					]
+				).spread(function(n1, n2){
+					console.log(n1 + n2);
+					return Q.when(n1 + n2);
+				})
+			}
+		});
+	}
+
+	fib(Q.when(max)).then(function(result){
+		res.send({n: result});
+	}).done();
+});
+
+blockingRouter.get("/:max", function(req, res){
+	var max = req.params.max;
+	function fib(n)
+	{
+		if (n <= 1)
+		{
+			return n;
+		}
+		else
+		{
+			var result = fib(n-1) + fib(n-2);
+			console.log(result);
+			return result;
+		}
+	}
+
+
+	var n = fib(max);
+	console.log(n);
+	res.send({n: n});
+
+});
+
+nonblockingRouterAsync.get("/:max", function(req, res){
+	var max = req.params.max;
+
+	function fib(n, done){
+		if(n < 2){
+			done(1);
+		} else {
+			//console.log(n);
+			setImmediate(function(){
+
+				fib(n - 2, function(val1){
+					fib(n - 1, function(val2){
+						console.log(val1 + val2);
+						done(val1 + val2);
+					})
+				})
+			})
+		}
+
+	}
+
+
+	fib(max, function(n){
+		res.send({n: n});
+	});
+
+
+});
+
+blocking.use(blockingRouter);
+nonblocking.use(nonblockingRouter);
+nonblockingAsync.use(nonblockingRouterAsync);
+
+module.exports = {
+	blocking: blocking,
+	nonblocking: nonblocking
+}
