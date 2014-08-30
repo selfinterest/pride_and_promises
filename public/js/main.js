@@ -29,28 +29,28 @@ angular.module("BlockingDemo", [])
 				$scope.output = "BLAH";
 			}],*/
 			link: function(scope, element, attrs, ngModel){
+				//This fires when something changes the external model from outside.
 				ngModel.$render = function() {
-					console.log("Render");
-					//scope.value = ngModel.$viewValue;
+					//This updates the directive's copy of the model
 					scope.value = ngModel.$modelValue;
-					//element.val(ngModel.$viewValue);
-										//console.log(arguments);
-					//scope.value = ngModel.$modelValue;
-					//console.log(scope);
+
+					//This updates the display (the text box).
+					element.val(scope.value);
 				};
 
 				function read(){
-					console.log("Read");
-					//console.log(ngModel);
+
+					//This line updates the underlying model
 					ngModel.$setViewValue(element.val() + "s");
+
+					//This line updates the display (the text box) if needed.
 					element.val(element.val() + 's');
 				}
 
 				read();
 
 				element.on("blur keyup change", function(){
-					console.log("Event");
-					//element.val(element.val() + 's');
+
 					scope.$apply(read);
 
 				});

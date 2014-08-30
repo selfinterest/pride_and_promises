@@ -13,3 +13,4 @@ block content
                             form(name="someForm")
                                 input(type="text", ng-model="output", tw-socket="'blockingdemo.promises'").form-control
                                 div {{output}}
+                                button(ng-click='output = "changed"').btn.btn-primary Click
