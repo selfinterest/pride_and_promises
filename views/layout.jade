@@ -1,7 +1,10 @@
 doctype html
-html
+html(ng-app="BlockingDemo")
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    title Pride & Promises
+    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/style.css')
   body
     block content
+    script(src='/components/angular/angular.js')
+    script(src='/js/main.js')

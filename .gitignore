@@ -3,3 +3,4 @@ BlockingDemonstration.iml
 .idea
 tmp
 node_modules
+public/components

@@ -1,5 +1,15 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    div.container
+        div.row
+            div.col-lg-12
+                h1 Fibonachi three ways
+        div(ng-controller="PromisesController").row
+            div.col-lg-12
+                div(title="Promises").tw-panel
+                    div.row
+                        div.col-lg-6
+                            form(name="someForm")
+                                input(type="text", ng-model="output", tw-socket="'blockingdemo.promises'").form-control
+                                div {{output}}
