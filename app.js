@@ -41,10 +41,27 @@ app.use("/", router.web);
 
 
 
-app.listen(3000, function(){
+var server = app.listen(3000, function(){
 	console.log("Application listening on port "+3000);
 });
 
+var WebSocket = require("./server/websocket.js");
+
+WebSocket({
+	httpServer: server,
+	app: app,
+	prefix: "/socket"
+});
+
+app.socket.on("connection", function(conn){
+	console.log("Connection established");
+	conn.write("Connected");
+});
+
+app.socket.on("test", function(){
+	console.log("Here");
+	app.socket.emit("testing");
+});
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
