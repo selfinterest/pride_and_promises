@@ -5,6 +5,7 @@ var sockjs = require('sockjs');
 var multiplex_server = require('websocket-multiplex');
 var EventEmitter = require('events').EventEmitter;
 var util = require("util");
+var twUtils = require("./tw-utils.js");
 
 util.inherits(ExpressWebSocketEventEmitter, EventEmitter);
 
@@ -55,7 +56,8 @@ function ExpressWebSocketEventEmitter(socket, multiplexer){
 
 	//}.bind(this));
 
-	this.on = function(eventName, handler){
+	this.on = function(route, handler){
+		var routeObject = breakIntoObjectOnSlashes(route);
 		if(!this.connection){       //no connection yet. Queue up the event.
 			if(eventName !== "connection") {
 				this.queue.push({eventName: eventName, handler: handler});
