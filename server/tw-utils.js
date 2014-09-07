@@ -1,7 +1,6 @@
 /**
  *
  * @param str
- * @param pattern
  */
 exports.splitStringIntoObject = function(str){
 	if(!pattern) throw new Error("Pattern is required");
@@ -9,6 +8,7 @@ exports.splitStringIntoObject = function(str){
 
 	//var result = {};
 	//Pattern: "/:name", splits on strings, assigns string to name property
+
 	var splitStr = pattern.charAt(0);
 	var stringParts = str.split(splitStr);
 

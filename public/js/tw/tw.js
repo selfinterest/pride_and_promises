@@ -2,6 +2,12 @@
  * Created by twatson on 8/30/14.
  */
 
+//$render is the result of a value passing from the model to the view.
+//$setViewValue is the start of passing a value from the view to the model.
+
+//	$modelValue -> $formatters -> $viewValue -> $render
+
+// $modelValue <- $parsers <- $viewValue <- $setViewValue
 angular.module("tw", [])
 	.directive("twPanel", [function(){
 		//Could hold this in a separate file, but why?
@@ -14,7 +20,6 @@ angular.module("tw", [])
 		return {
 			restrict: "C",
 			transclude: true,
-			replace: false,
 			scope: true,
 			template: template,
 			link: function(scope, elm, attr){
@@ -40,7 +45,7 @@ angular.module("tw", [])
 				//This fires when something changes the external model from outside.
 				ngModel.$render = function() {
 					//This updates the directive's copy of the model, held in scope
-					scope.value = ngModel.$modelValue;
+					//scope.value = ngModel.$modelValue;
 
 					//This updates the display (the text box).
 					element.val(scope.value);

@@ -4,7 +4,7 @@
 
 var twUtils = require("../../server/tw-utils.js");
 
-describe("tw utilities", function(){
+xdescribe("tw utilities", function(){
 	describe("splitStringIntoObject", function(){
 		it("if given a string without a pattern, should throw an error", function() {
 			var fn = function(){
@@ -20,7 +20,7 @@ describe("tw utilities", function(){
 		});
 
 		it("if given a string with a pattern, where the pattern does match, should return an object", function(){
-			var result = twUtils.splitStringIntoObject("test:name/child:name", "name");
+			var result = twUtils.splitStringIntoObject("name:test/child:name");
 			expect(result).to.be.an("object");
 		});
 
