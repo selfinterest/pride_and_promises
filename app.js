@@ -24,7 +24,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var router = require("./server/router.js");
 
+//API ROUTES
 app.use("/api", router.api);
+
+
+//TEMPLATE ROUTE
 app.use("/templates/:templateName", function(req, res){
 	var templateName = req.params.templateName;
 	res.render(templateName, function(err, html){
@@ -35,33 +39,28 @@ app.use("/templates/:templateName", function(req, res){
 		}
 	});
 });
+
+//WEB ROUTE (only one, 'cause this a single page application)
 app.use("/", router.web);
 
 
-
-
-
+//HTTP
 var server = app.listen(3000, function(){
 	console.log("Application listening on port "+3000);
 });
 
-var WebSocket = require("./server/websocket.js");
 
-WebSocket({
-	httpServer: server,
-	app: app,
-	prefix: "/socket"
-});
+//WEBSOCKET
+var io = require('socket.io')(server);
+var expressSocket = require("./server/class/expressSocket.js");
+expressSocket(io);
 
-app.socket.on("connection", function(conn){
-	console.log("Connection established");
-	conn.write("Connected");
-});
+/*io.on('connection', function(socket){
 
-app.socket.on("test", function(){
-	console.log("Here");
-	app.socket.emit("testing");
-});
+});*/
+
+
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

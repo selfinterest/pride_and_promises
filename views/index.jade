@@ -5,12 +5,11 @@ block content
         div.row
             div.col-lg-12
                 h1 Fibonachi three ways
-        div(ng-controller="PromisesController").row
-            div.col-lg-12
-                div(title="Promises").tw-panel
-                    div.row
-                        div.col-lg-6
-                            form(name="someForm")
-                                input(type="text", ng-model="output", tw-socket="'blockingdemo.promises'").form-control
-                                div {{output}}
-                                button(ng-click='output = "changed"').btn.btn-primary Click
+                div(ng-controller="NodesController")
+                    div(ng-repeat="(nodeName, node) in nodes").row
+                        div.col-lg-12
+                            div(title="{{nodeName}}").tw-panel
+                                div.row
+                                    div.col-lg-2
+                                        button(ng-click="$parent.startNode(nodeName)").btn.btn-primary Start server
+                                        span(ng-show="node.started").label.label-primary Started

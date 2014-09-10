@@ -1,7 +1,7 @@
 /**
  * Created by twatson on 8/29/14.
  */
-var functionServer = require("./functionServer.js");
+var functionServer = require("./../functionServer.js");
 
 
 function fib(n)
