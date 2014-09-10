@@ -4,7 +4,7 @@ block content
     div.container
         div.row
             div.col-lg-12
-                h1 Fibonachi three ways
+                h1 Fibonacci three ways
                 div(ng-controller="NodesController")
                     div.row
                         div.col-lg-12
@@ -16,3 +16,27 @@ block content
                                     div.col-lg-2
                                         button(ng-click="$parent.startNode(nodeName)", ng-disabled="node.started").btn.btn-primary Start server
                                         span(ng-show="node.started").label.label-primary Started
+                                div(ng-show="node.started").row
+                                    div.col-lg-12
+                                        div.panel.panel-default
+                                            div.panel-heading
+                                                h5.panel-title Test output
+                                            div.panel-body
+                                                div.row
+                                                    div.col-lg-8
+                                                        textarea(ng-model="node.test.data").col-lg-12
+                                                    div.col-lg-4
+                                                        h3 Test parameters
+                                                        div.row
+                                                            div.col-lg-12
+                                                                form(role="form")
+                                                                    div.form-group
+                                                                        label Fibonacci number to calculate
+                                                                        input(type="text", ng-model="node.test.number").form-control
+                                                                    div.form-group
+                                                                        label Number of connections
+                                                                        input(type="text", ng-model="node.test.connections").form-control
+                                                                    div.form-group
+                                                                        label Concurrency (how many connections at once)
+                                                                        input(type="text", ng-model="node.test.concurrency").form-control
+                                                                    button(ng-click="$parent.startTest(nodeName)", ng-disabled="node.test.started").btn.btn-primary Start test!

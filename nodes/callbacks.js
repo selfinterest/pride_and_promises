@@ -5,7 +5,25 @@ var functionServer = require("./../functionServer.js");
 var async = require("async");
 
 
-function fib(n, callback) {
+var fibonacci = function (n, callback) {
+	if (n <= 1) {
+		callback(null, 1);
+	} else {
+		var lhs, rhs;
+		fibonacci(n - 1, function (err, l) {
+			if (err) return callback(err);
+			lhs = l;
+			if (rhs) callback(null, lhs + rhs);
+		});
+		fibonacci(n - 2, function (err, r) {
+			if (err) return callback(err);
+			rhs = r;
+			if (lhs) callback(null, lhs + rhs);
+		});
+	}
+};
+
+/*function fib(n, callback) {
 	if (n <= 1) {
 		callback(null, 1);
 	} else {
@@ -22,16 +40,18 @@ function fib(n, callback) {
 				callback(null, operands[0] + operands[1]);
 			});
 	}
-}
+}*/
 
 
 
 function requestHandler(req, res){
 	var max = req.params.max;
-
-	fib(req.params.max, function(err, n){
-		res.send({n: n});
+	fibonacci(max, function(){
+		res.send({ok: true});
 	});
+	/*fib(req.params.max, function(err, n){
+		res.send({n: n});
+	});*/
 }
 
 functionServer(requestHandler, 5001, "Callback server running on port 5001");

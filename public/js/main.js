@@ -10,6 +10,13 @@ angular.module("BlockingDemo", ["tw"])
 			this.name = nodeName;
 			this.socket = io("/"+nodeName);
 			this.started = false;
+			this.test = {
+				number: 8,
+				connections: 100,
+				concurrency: 5,
+				data: "",
+				started: false
+			}
 		}
 
 		var nodeSocket = twSocketManager.namespace("/nodes");
@@ -36,8 +43,29 @@ angular.module("BlockingDemo", ["tw"])
 						$scope.$apply(function(){
 							$scope.nodes[nodeName].started = false;
 						});
-
 					});
+
+					$scope.nodes[nodeName].socket.on("test_data", function(data){
+
+						if(data.node == nodeName){
+							$scope.$apply(function(){
+								$scope.nodes[nodeName].test.started = true;
+								$scope.nodes[nodeName].test.data += data.data;
+							});
+
+						}
+					});
+
+					$scope.nodes[nodeName].socket.on("test_exit", function(data){
+						if(data.node == nodeName){
+							$scope.$apply(function(){
+								$scope.nodes[nodeName].test.started = false;
+							});
+
+						}
+					});
+
+
 				});
 			})
 		});
@@ -52,7 +80,7 @@ angular.module("BlockingDemo", ["tw"])
 		$scope.startNode = function(node){
 			console.log(node);
 			$scope.nodes[node].socket.emit("start");
-		}
+		};
 
 		$scope.stopAll = function(){
 			for(var node in $scope.nodes){
@@ -60,6 +88,14 @@ angular.module("BlockingDemo", ["tw"])
 					$scope.nodes[node].socket.emit("exit");
 				}
 			}
-		}
+		};
+
+		$scope.startTest = function(nodeName){
+			console.log($scope.nodes[nodeName]);
+			$scope.nodes[nodeName].socket
+				.emit("test", {connections: $scope.nodes[nodeName].test.connections, concurrency: $scope.nodes[nodeName].test.concurrency, number: $scope.nodes[nodeName].test.number});
+		};
+
+		$scope.stopAll();
 	}]);
 

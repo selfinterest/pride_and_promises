@@ -25,7 +25,7 @@ function requestHandler(req, res){
 	var max = req.params.max;
 
 	fib(max).then(function(n){
-		res.send({n: n});
+		res.send({ok: true});
 	});
 
 }

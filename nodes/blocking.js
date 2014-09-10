@@ -6,7 +6,7 @@ var functionServer = require("./../functionServer.js");
 
 function fib(n)
 {
-	console.log(n);
+	//console.log(n);
 	if (n <= 1){
 		return 1;
 	}
@@ -15,11 +15,23 @@ function fib(n)
 
 }
 
+function nodeified(n, callback){
+	try {
+		callback(null, fib(n));
+	} catch(err){
+		callback(err);
+	}
+}
 function requestHandler(req, res){
 	var max = req.params.max;
-	var n = fib(max);
 
-	res.send({n: n});
+	nodeified(max, function(){
+		res.send({ok: true});
+	});
+	// var n = fib(max);
+
+
+	//res.send({n: n});
 
 }
 
