@@ -21,7 +21,11 @@ angular.module("BlockingDemo", ["tw"])
 				nodeNames.forEach(function(nodeName){
 					$scope.nodes[nodeName] = new Node(nodeName);
 					$scope.nodes[nodeName].socket.on("data", function(data){
-						$scope.nodes[nodeName].started = true;
+						console.log("Started");
+						$scope.$apply(function(){
+							$scope.nodes[nodeName].started = true;
+						});
+
 					});
 
 					$scope.nodes[nodeName].socket.on("error", function(error){
@@ -29,7 +33,10 @@ angular.module("BlockingDemo", ["tw"])
 					});
 
 					$scope.nodes[nodeName].socket.on("exit", function(){
-						$scope.nodes[nodeName].started = false;
+						$scope.$apply(function(){
+							$scope.nodes[nodeName].started = false;
+						});
+
 					});
 				});
 			})
@@ -45,6 +52,14 @@ angular.module("BlockingDemo", ["tw"])
 		$scope.startNode = function(node){
 			console.log(node);
 			$scope.nodes[node].socket.emit("start");
+		}
+
+		$scope.stopAll = function(){
+			for(var node in $scope.nodes){
+				if($scope.nodes.hasOwnProperty(node)){
+					$scope.nodes[node].socket.emit("exit");
+				}
+			}
 		}
 	}]);
 
