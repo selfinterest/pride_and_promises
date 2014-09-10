@@ -90,11 +90,34 @@ angular.module("BlockingDemo", ["tw"])
 			}
 		};
 
-		$scope.startTest = function(nodeName){
+		$scope.startTest = function(nodeName, number, connections, concurrency){
 			console.log($scope.nodes[nodeName]);
-			$scope.nodes[nodeName].socket
-				.emit("test", {connections: $scope.nodes[nodeName].test.connections, concurrency: $scope.nodes[nodeName].test.concurrency, number: $scope.nodes[nodeName].test.number});
+			if(arguments.length == 1){
+				$scope.nodes[nodeName].socket
+					.emit("test", {connections: $scope.nodes[nodeName].test.connections, concurrency: $scope.nodes[nodeName].test.concurrency, number: $scope.nodes[nodeName].test.number});
+			} else {
+				$scope.nodes[nodeName].socket
+					.emit("test", {connections: connections, number: number, concurrency: concurrency});
+			}
+
 		};
+
+		$scope.allNumber = 8;
+		$scope.allConnections = 100;
+		$scope.allConcurrency = 5;
+
+		$scope.runAll = function(){
+			console.log("Starting all tests");
+			for(var node in $scope.nodes){
+				if($scope.nodes.hasOwnProperty(node)){
+					if($scope.nodes[node].started){
+
+						$scope.startTest(node, $scope.allNumber, $scope.allConnections, $scope.allConcurrency)
+					}
+				}
+
+			}
+		}
 
 		$scope.stopAll();
 	}]);

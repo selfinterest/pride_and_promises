@@ -8,7 +8,15 @@ block content
                 div(ng-controller="NodesController")
                     div.row
                         div.col-lg-12
-                            button(ng-click="stopAll()").btn-danger.btn Stop all processes
+                            form(role="form").form-inline
+                                div.form-group
+                                    input(type="text", placeholder="number", ng-model="allNumber")
+                                div.form-group
+                                    input(type="text", placeholder="connections", ng-model="allConnections")
+                                div.form-group
+                                    input(type="text", placeholder="concurrency", ng-model="allConcurrency")
+                                button(ng-click="runAll()").btn.btn-info Run all tests
+                                button(ng-click="stopAll()").btn-danger.btn Stop all processes
                     div(ng-repeat="(nodeName, node) in nodes").row
                         div.col-lg-12
                             div(title="{{nodeName}}").tw-panel
@@ -25,7 +33,7 @@ block content
                                                 div.row
                                                     div.col-lg-8
                                                         textarea(ng-model="node.test.data").col-lg-12
-                                                    div.col-lg-4
+                                                    div(ng-show="nodeName.indexOf('fib') > -1").col-lg-4
                                                         h3 Test parameters
                                                         div.row
                                                             div.col-lg-12
@@ -40,3 +48,5 @@ block content
                                                                         label Concurrency (how many connections at once)
                                                                         input(type="text", ng-model="node.test.concurrency").form-control
                                                                     button(ng-click="$parent.startTest(nodeName)", ng-disabled="node.test.started").btn.btn-primary Start test!
+                                                    div(ng-show="nodeName.indexOf('fib') < 0").col-lg-4
+                                                        button(ng-click="$parent.startTest(nodeName)", ng-disabled="node.test.started").btn.btn-primary Start test!
